@@ -1,45 +1,31 @@
 # NN Inspector
 
-An interactive web application for visualizing and exploring neural network architectures. A live demo of this app is also [available online](https://frasertheking.com/nn_app/). 
+**NN Inspector** is an interactive web application for visualizing and exploring neural network architectures in real time. If you've ever wondered how a neural network actually works, this playground lets you experiment with various components of the network to see how performance changes using real world data. 
 
-## Table of Contents
-
-- [Features](#features)
-- [Why is Model Interpretability Important?](#why-is-model-interpretability-important)
-- [Use Cases](#use-cases)
-- [Getting Started](#getting-started)
-  - [Installation](#installation)
-  - [Usage](#usage)
-- [Configuration](#configuration)
-- [JSON Schema](#json-schema)
-- [Examples](#examples)
-- [Roadmap](#roadmap)
-- [Inspiration](#inspiration)
-- [Contributing](#contributing)
-- [Contact](#contact)
-
----
+A live demo of this app is also [available online](https://frasertheking.com/nn_app/). 
 
 ## Features
+What can this tool do?
 
 - **Interactive Visualization**: Adjust parameters and observe real-time changes in model behavior.
-- **Multiple Neural Network Support**: Explore various types of neural networks.
-- **Custom Model Analysis**: Upload and analyze your own operational models.
+- **Multiple Neural Network Support**: Explore various types of neural networks (classifiers and regressors*).
+- **Custom Model Analysis**: Upload and analyze your own operational models with real world data.
 - **Physical Model Interpretation**: Interpret simplified versions to understand model learning behavior.
-- **Real-Time Feedback**: See immediate effects of network changes on performance.
+- **Real-Time Feedback**: See immediate effects of network changes on performance test data.
+- **Education**: The visual and interactive nature of this tool makes it excellent for educational purposes.
 
 ---
 
 ## Why is Model Interpretability Important?
 
-As machine learning models become increasingly complex, understanding their decision-making processes is crucial for:
+As machine learning models become increasingly sophisticated, understanding their decision-making processes is crucial for:
 
 - **Transparency**: Building trust in AI systems.
 - **Bias Identification**: Detecting biases and ethical issues.
-- **Performance Improvement**: Understanding failure modes to enhance models.
+- **Performance Improvement**: Understanding failure modes to enhance model reliability.
 - **Regulatory Compliance**: Meeting explainability requirements.
 
-However, interpretability is challenging due to model complexity. NN Inspector simplifies this by allowing users to focus on individual neurons and start with simple configurations.
+While we don't promise a full mechanistic interpretability workflow, this tool can be useful for various explainable AI projects and facilitates movement towards an interpretable understanding of model behaviour. NN Inspector simplifies network complexity by allowing users to focus on individual neurons and start with simple configurations.
 
 ---
 
@@ -49,7 +35,7 @@ NN Inspector is designed for:
 
 - **Students**: Learn how neural networks work in an interactive environment.
 - **Educators**: Use as a teaching aid to demonstrate neural network concepts.
-- **Researchers**: Experiment with different configurations and gain insights into model behaviors.
+- **Researchers**: Experiment with different configurations and gain insights into underlying model behaviours.
 
 ---
 
