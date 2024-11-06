@@ -106,7 +106,69 @@ let hiddenNeuronOptions = [1, 2, 4, 8, 16];
 
 ## JSON Schema
 
-Customize the application by modifying the user configuration options in the JavaScript file.
+In order for the platform to parse your model data, you need to follow a specific JSON schema. We are looking to make many of these optional as time goes on:
+
+- **predictors**: Array of M strings  
+  - **Description**: Names of the predictors used in the model.
+  - **Example**: `["Temperature", "Relative Humidity", "Pressure"]`
+
+- **units**: Array of M strings  
+  - **Description**: Units corresponding to each predictor.
+  - **Example**: `["K", "%", "hPa"]`
+
+- **response_variable**: Array of J strings  
+  - **Description**: Target classes for the model's predictions.
+  - **Example**: `["Rain", "Snow", "Mixed-phase"]`
+
+- **N_HIDDEN**: Integer  
+  - **Description**: Number of hidden layers in the model.
+  - **Example**: `1`
+
+- **weights_history**: Array of arrays (multi-dimensional) [N EPOCHS x 2 LAYERS x M INPUTS x K HIDDEN NEURONS]
+  - **Description**: Historical weights for each layer in the model over training epochs.
+
+- **biases_history**: Array of arrays (multi-dimensional)  [N EPOCHS x 2 LAYERS x K HIDDEN NEURONS]
+  - **Description**: Historical biases for each layer in the model over training epochs.
+
+- **activations_history**: Array of arrays (multi-dimensional)  [N EPOCHS x 2 LAYERS x K HIDDEN NEURONS]
+  - **Description**: Historical activations of each layer in the model over training epochs.
+
+- **loss_history**: Array of N floats 
+  - **Description**: Loss values recorded at each training epoch.
+  - **Example**: `[1.084, 0.982, 0.920, ...]`
+
+- **val_loss_history**: Array of N floats  
+  - **Description**: Validation loss values recorded at each training epoch.
+  - **Example**: `[1.002, 0.925, 0.904, ...]`
+
+- **accuracy_history**: Array of N floats  
+  - **Description**: Training accuracy recorded at each epoch.
+  - **Example**: `[0.372, 0.547, 0.610, ...]`
+
+- **val_accuracy_history**: Array of N floats  
+  - **Description**: Validation accuracy recorded at each epoch.
+  - **Example**: `[0.448, 0.492, 0.490, ...]`
+
+- **scaling_info**: Object  
+  - **Description**: Information for scaling input features.
+  - **Fields**:
+    - **mean**: Array of M floats  
+      - **Example**: `[0.181, 90.420, 1012.608]`
+    - **scale**: Array of M floats  
+      - **Example**: `[0.236, 6.134, 9.546]`
+
+- **hyperparameters**: Object  
+  - **Description**: Hyperparameters used for model training.
+  - **Fields**:
+    - **OPTMIZER**: String (e.g., `"ADAM"`)
+    - **LR**: Float (e.g., `0.0005`)
+    - **LOSS_FUNC**: String (e.g., `"categorical_crossentropy"`)
+    - **ACTIVATION**: String (e.g., `"relu"`)
+    - **BATCH_SIZE**: Integer (e.g., `32`)
+    - **L1_flag**: Boolean (e.g., `true`)
+    - **L1**: Float (e.g., `0.01`)
+
+
 
 ---
 
