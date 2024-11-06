@@ -106,7 +106,7 @@ let hiddenNeuronOptions = [1, 2, 4, 8, 16];
 
 ## JSON Schema
 
-In order for the platform to parse your model data, you need to follow a specific JSON schema. We are looking to make many of these optional as time goes on. N is total epochs, M is number of predictors, J is number of outputs, K is number of hidden layer neurons
+In order for the platform to parse your model data, you need to follow a specific JSON schema. We are looking to make many of these optional as time goes on. ___N___ is total epochs, ___M___ is number of predictors, ___J___ is number of outputs, ___K___ is number of hidden layer neurons
 
 - **predictors**: Array of ___M___ strings  
   - **Description**: Names of the predictors used in the model.
@@ -154,7 +154,7 @@ In order for the platform to parse your model data, you need to follow a specifi
   - **Fields**:
     - **mean**: Array of ___M___ floats  
       - **Example**: `[0.181, 90.420, 1012.608]`
-    - **scale**: Array of M floats  
+    - **scale**: Array of ___M___ floats  
       - **Example**: `[0.236, 6.134, 9.546]`
 
 - **hyperparameters**: Object  
@@ -167,8 +167,6 @@ In order for the platform to parse your model data, you need to follow a specifi
     - **BATCH_SIZE**: Integer (e.g., `32`)
     - **L1_flag**: Boolean (e.g., `true`)
     - **L1**: Float (e.g., `0.01`)
-
-
 
 ---
 
