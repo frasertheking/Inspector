@@ -183,6 +183,13 @@ class WeightBiasHistory(tf.keras.callbacks.Callback):
         val_accuracy_history.append(logs.get('val_accuracy'))
 ```
 
+```python
+history = model.fit(X_train, y_train,
+                    validation_data=(X_val, y_val),
+                    epochs=N_EPOCHS, batch_size=BATCH_SIZE,
+                    callbacks=[callback])
+```
+
 You'll then want to save this, along with the other variables in the JSON schema to a series of JSON files (one for each combination of inputs/hidden neurons:
 
 ```python
