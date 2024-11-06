@@ -106,17 +106,17 @@ let hiddenNeuronOptions = [1, 2, 4, 8, 16];
 
 ## JSON Schema
 
-In order for the platform to parse your model data, you need to follow a specific JSON schema. We are looking to make many of these optional as time goes on:
+In order for the platform to parse your model data, you need to follow a specific JSON schema. We are looking to make many of these optional as time goes on. N is total epochs, M is number of predictors, J is number of outputs, K is number of hidden layer neurons
 
-- **predictors**: Array of M strings  
+- **predictors**: Array of ___M___ strings  
   - **Description**: Names of the predictors used in the model.
   - **Example**: `["Temperature", "Relative Humidity", "Pressure"]`
 
-- **units**: Array of M strings  
+- **units**: Array of ___M___ strings  
   - **Description**: Units corresponding to each predictor.
   - **Example**: `["K", "%", "hPa"]`
 
-- **response_variable**: Array of J strings  
+- **response_variable**: Array of ___J___ strings  
   - **Description**: Target classes for the model's predictions.
   - **Example**: `["Rain", "Snow", "Mixed-phase"]`
 
@@ -124,35 +124,35 @@ In order for the platform to parse your model data, you need to follow a specifi
   - **Description**: Number of hidden layers in the model.
   - **Example**: `1`
 
-- **weights_history**: Array of arrays (multi-dimensional) [N EPOCHS x 2 LAYERS x M INPUTS x K HIDDEN NEURONS]
+- **weights_history**: Array of arrays (multi-dimensional) ___[N x 2 x M x K]___
   - **Description**: Historical weights for each layer in the model over training epochs.
 
-- **biases_history**: Array of arrays (multi-dimensional)  [N EPOCHS x 2 LAYERS x K HIDDEN NEURONS]
+- **biases_history**: Array of arrays (multi-dimensional)  ___[N x 2 x K]___
   - **Description**: Historical biases for each layer in the model over training epochs.
 
-- **activations_history**: Array of arrays (multi-dimensional)  [N EPOCHS x 2 LAYERS x K HIDDEN NEURONS]
+- **activations_history**: Array of arrays (multi-dimensional)  ___[N x 2 x K]___
   - **Description**: Historical activations of each layer in the model over training epochs.
 
-- **loss_history**: Array of N floats 
+- **loss_history**: Array of ___N___ floats 
   - **Description**: Loss values recorded at each training epoch.
   - **Example**: `[1.084, 0.982, 0.920, ...]`
 
-- **val_loss_history**: Array of N floats  
+- **val_loss_history**: Array of ___N___ floats  
   - **Description**: Validation loss values recorded at each training epoch.
   - **Example**: `[1.002, 0.925, 0.904, ...]`
 
-- **accuracy_history**: Array of N floats  
+- **accuracy_history**: Array of ___N___ floats  
   - **Description**: Training accuracy recorded at each epoch.
   - **Example**: `[0.372, 0.547, 0.610, ...]`
 
-- **val_accuracy_history**: Array of N floats  
+- **val_accuracy_history**: Array of ___N___ floats  
   - **Description**: Validation accuracy recorded at each epoch.
   - **Example**: `[0.448, 0.492, 0.490, ...]`
 
 - **scaling_info**: Object  
   - **Description**: Information for scaling input features.
   - **Fields**:
-    - **mean**: Array of M floats  
+    - **mean**: Array of ___M___ floats  
       - **Example**: `[0.181, 90.420, 1012.608]`
     - **scale**: Array of M floats  
       - **Example**: `[0.236, 6.134, 9.546]`
