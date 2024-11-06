@@ -1,4 +1,4 @@
-# NN Inspector
+# :mag_right: NN Inspector
 
 **NN Inspector** is an interactive web application for visualizing and exploring neural network architectures in real time. If you've ever wondered how a neural network actually works, this playground lets you experiment with various components of the network to see how performance changes using real world data. 
 
