@@ -221,20 +221,19 @@ with open(filepath, 'w') as f:
   json.dump(model_data, f)
 ```
 
----
 
 ## Roadmap
 
 The application is currently under development with the following planned improvements:
 
-- UI Enhancements: Improving the user interface for better usability.
-- Regression Models: Allowing for regression models in addition to classification.
-- Model Switching: Enhancing capabilities to switch between models seamlessly.
-- Error Dialogues: Implementing better error handling and messaging.
-- Multiple Hidden Layers: Supporting neural networks with multiple hidden layers.
-- Advanced Statistics: Providing more detailed statistics and analytical tools.
+- **Optional Features**: Finishing the ability to leave certain items out of the JSON schema.
+- **UI Enhancements**: Improving the user interface for better usability.
+- **Regression Models**: Allowing for regression models in addition to classification.
+- **Model Switching**: Enhancing ability to switch between models seamlessly.
+- **Error Dialogues**: Implementing better error handling and messaging.
+- **Multiple Hidden Layers**: Supporting neural networks with multiple hidden layers.
+- **Advanced Statistics**: Providing more detailed statistics and analytical tools.
 
----
 
 ## Inspiration
 
@@ -243,7 +242,6 @@ The project draws inspiration from:
 - Daniel Smilkov and Shan Carter: For their work on interactive tools like TensorFlow Playground that make complex machine learning concepts accessible.
 - Chris Olah and Colleagues at Anthropic: Especially their work on Toy Models of Superposition in interpretability research.
 
----
 
 ## Contributing
 
@@ -254,7 +252,6 @@ Contributions are welcome! Please follow these steps:
 - Commit your changes and push the branch.
 - Submit a pull request for review.
 
----
 
 ## Contact
-Fraser King, University of Michigan
+Fraser King, University of Michigan (kingfr@umich.edu)
