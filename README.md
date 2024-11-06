@@ -4,6 +4,7 @@
 
 A live demo of this app is also [available online](https://frasertheking.com/nn_app/). 
 
+
 ## Features
 What can this tool do?
 
@@ -14,7 +15,6 @@ What can this tool do?
 - **Real-Time Feedback**: See immediate effects of network changes on performance test data.
 - **Education**: The visual and interactive nature of this tool makes it excellent for educational purposes.
 
----
 
 ## Why is Model Interpretability Important?
 
@@ -27,7 +27,6 @@ As machine learning models become increasingly sophisticated, understanding thei
 
 While we don't promise a full mechanistic interpretability workflow, this tool can be useful for various explainable AI projects and facilitates movement towards an interpretable understanding of model behaviour. NN Inspector simplifies network complexity by allowing users to focus on individual neurons and start with simple configurations.
 
----
 
 ## Use Cases
 
@@ -37,7 +36,7 @@ NN Inspector is designed for:
 - **Educators**: Use as a teaching aid to demonstrate neural network concepts.
 - **Researchers**: Experiment with different configurations and gain insights into underlying model behaviours.
 
----
+
 
 ## Getting Started
 
@@ -45,22 +44,17 @@ NN Inspector is designed for:
 
 Clone the repository:
 ```bash
-git clone https://github.com/yourusername/nn-inspector.git
+git clone https://github.com/frasertheking/inspector.git
 ```
 
-Navigate to the project directory:
+Navigate to the project directory, add your data and edit configs in script.js as necessary (below):
 ```bash
-cd nn-inspector
-```
-
-Install dependencies (if applicable):
-```bash
-npm install
+cd inspector
 ```
 
 ### Usage
 
-Start a local server and open the application in your web browser:
+Since we are loading JSON data, we will either need to use a public webserver, or you can start a local server and open the application in your web browser:
 
 ```python
 # Using Python's HTTP server
@@ -72,23 +66,21 @@ npx http-server
 
 Access the application at http://localhost:8000
 
----
 
 ## Configuration
 
-Customize the application by modifying the user configuration options in the JavaScript file.
+Customize the application by modifying the user configuration options in the JavaScript file. Change your input predictors, add units and make sure the paths are pointing to the correct locations:
 
 ```javascript
-let model_name = '3phase';
+let model_name = 'name-goes-here';
 let input_vars = ["n0", "lambda", "Rho", "Fs", "Dm", "Temperature", "Relative Humidity", "Pressure"];
 let log_scaled_vars = ['n0', 'lambda', 'Rho', 'Dm'];
 let response_vars = ['Rain', 'Snow', 'Mixed-Phase'];
-let model_loc = 'models/phase3/';
-let test_filepath = 'data/test_data.csv';
+let model_loc = 'models/name-goes-here/';
+let test_filepath = 'data/data_name-goes-here.csv';
 let hiddenNeuronOptions = [1, 2, 4, 8, 16];
 ```
 
----
 
 ## JSON Schema
 
@@ -154,25 +146,72 @@ In order for the platform to parse your model data, you need to follow a specifi
     - **L1_flag**: Boolean (e.g., `true`)
     - **L1**: Float (e.g., `0.01`)
 
----
 
 ## TensorFlow Callback
 
-Below is an example for running and saving model data using TensorFlow:
+Since we aren't doing model training on the webserver, we precompute a variety of interesting model combinations and save them in the above JSON format to load on the fly. This helps save computational resources and makes things lighter on the web server. To do this, we've provided a simple callback below you can include in your TensorFlow fitting call that saves the relevant information. 
 
 ```python
-import json
+class WeightBiasHistory(tf.keras.callbacks.Callback):
+    def __init__(self, X_train):
+        super().__init__()
+        self.X_train = X_train
 
-# Load your model data
-with open('model_data.json', 'r') as file:
-    model_data = json.load(file)
+    def on_train_begin(self, logs=None):
+        self.model.predict(self.X_train[:1])
+        self.intermediate_layer_model = tf.keras.models.Model(
+            inputs=self.model.layers[0].input,
+            outputs=[layer.output for layer in self.model.layers if 'dense' in layer.name]
+        )
 
-# Perform operations on the model data
-# ...
+    def on_epoch_end(self, epoch, logs=None):
+        weights = [layer.get_weights()[0].tolist() for layer in self.model.layers if layer.get_weights()]
+        biases = [layer.get_weights()[1].tolist() for layer in self.model.layers if layer.get_weights()]
 
-# Save the updated model data
-with open('model_data_updated.json', 'w') as file:
-    json.dump(model_data, file)
+        weights_history.append(weights)
+        biases_history.append(biases)
+
+        activations = self.intermediate_layer_model.predict(self.X_train_comb[:BATCH_SIZE])
+        activations_history.append([
+            [float(x) for x in activations[0][0]], 
+            [float(x) for x in activations[1][0]]
+        ])
+
+        loss_history.append(logs.get('loss'))
+        val_loss_history.append(logs.get('val_loss'))
+        accuracy_history.append(logs.get('accuracy'))
+        val_accuracy_history.append(logs.get('val_accuracy'))
+```
+
+You'll then want to save this, along with the other variables in the JSON schema to a series of JSON files (one for each combination of inputs/hidden neurons:
+
+```python
+model_data = {
+  'predictors': predictor_array,
+  'units': units_array,
+  'response_variable': response_array,
+  'N_HIDDEN': N_HIDDEN,
+  'weights_history': weights_history,
+  'biases_history': biases_history,
+  'activations_history': activations_history,
+  'loss_history': loss_history,
+  'val_loss_history': val_loss_history,
+  'accuracy_history': accuracy_history,
+  'val_accuracy_history': val_accuracy_history,
+  'scaling_info': scaling_info, // from train_test_split
+  'hyperparameters': {
+      'OPTMIZER': OPTIMIZER,
+      'LR': LR,
+      'LOSS_FUNC': LOSS_FUNC,
+      'ACTIVATION': ACTIVATION,
+      'BATCH_SIZE': BATCH_SIZE,
+      'L1_flag': L1_flag,
+      'L1': L1
+  }
+}
+
+with open(filepath, 'w') as f:
+  json.dump(model_data, f)
 ```
 
 ---
