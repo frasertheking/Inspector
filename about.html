@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<!-- 
+NN Inspector - About Page
+Author: Fraser King
+Date: November, 2024
+Description: This is the About page for the NN Inspector application, providing information about the project, its purpose, developers, and the importance of model interpretability.
+-->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="About page for the NN Inspector application, providing information about the project, its purpose, developers, and the importance of model interpretability.">
+    <meta name="keywords" content="neural network, interactive, interpretability, interpretable, MLP, perceptron, toy models, machine learning, about">
+    <meta name="author" content="Fraser King">
+    <title>About - NN Inspector</title>
+    <link rel="stylesheet" href="css/style.css"> 
+</head>
+<body>
+    <div id="header">
+        <a href="https://frasertheking.com/nn_app/" style='text-decoration: none;'><div class="header-title">&#128270 NN Inspector</div></a>
+        <div class="header-links">
+            <a href="https://github.com/frasertheking/inspector" target="_blank">How to Use</a>
+            <a href="about.html" target="_self">About</a>
+            <a href="mailto:kingfr@umich.edu" target="_blank">Contact</a>
+        </div>
+        <button class="header-button" onclick="handleButtonClick()">Try with Your Own Data</button>
+    </div>
+
+    <div id="main-content-about">
+        <div class="content-section">
+            <h1>About</h1>
+            <p><strong>NN Inspector</strong> is an interactive web application designed to visualize and explore neural network architectures. It allows users to adjust parameters, visualize model behaviors, and gain insights into how neural networks learn and make predictions. It supports various types of neural networks and provides real-time feedback on how changes to the network affect its performance. Unlike other platforms, our system uniquely enables users to upload and analyze their own operational models. For physical models, where we often hypothesize about key features but lack explicit visualization/confirmation of these embeddings, this tool offers a way to interpret simplified versions, bringing us closer to a clearer understanding of model learning behaviour.</p>
+        </p>
+        </div>
+
+        <div class="content-section">
+            <h2>Why is Model Interpretability Important?</h2>
+            <p>As machine learning models become increasingly complex, understanding how they make decisions becomes more challenging. Model interpretability is crucial for ensuring transparency, building trust, and facilitating debugging in AI systems. Interpretable models help us to:</p>
+            <ul>
+                <li>Identify biases and ethical issues in decision-making.</li>
+                <li>Improve model performance by understanding failure modes.</li>
+                <li>Comply with regulatory requirements for explainability.</li>
+            </ul>
+            <p>However, achieving interpretability is not straightforward due to the complexity of modern models. The idea here being to zoom in, start simple and small, and see how individual neurons behave for physical models.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>What Can It Be Used For?</h2>
+            <p>NN Inspector is designed for students, educators, and researchers who are interested in understanding the inner workings of neural networks. It can be used as a teaching aid, a learning tool, or a platform for experimenting with different neural network configurations.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Who is Developing It?</h2>
+            <p>This project is developed by <strong>Fraser King</strong>, a researcher at the <a href="https://umich.edu/" target="_blank">University of Michigan</a>.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Inspiration</h2>
+            <p>This project draws inspiration from the work of Daniel Smilkov and Shan Carter, particularly their efforts in creating interactive tools that make complex machine learning concepts accessible to a wider audience (<a href="https://playground.tensorflow.org/" target="_blank">https://playground.tensorflow.org/</a>). Further, researchers like <a href="https://colah.github.io/" target="_blank">Chris Olah</a> and his colleagues at Anthropic (especially their work on <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank">Toy Models of Superposition</a>) are pioneering techniques in interpretability research to tackle these types of challenges.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Last Updated</h2>
+            <p>This application was last updated in <strong>November 2024</strong>.</p>
+        </div>
+    </div>
+
+    <!-- <div id="footer">
+        <p>&copy; 2024 Fraser King |<a href="https://umich.edu/" target="_blank">University of Michigan</a>| Towards Interpretable Models</p>
+    </div> -->
+</body>
+</html>

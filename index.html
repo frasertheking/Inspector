@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<!-- 
+NN Inspector Application - HTML
+Author: Fraser King
+Date: November, 2024
+Description: This is the main HTML file for the NN Inspector application, which visualizes 
+neural network architectures and provides an interface for interactive adjustments and analysis.
+Dependencies: D3.js v6, CSS (style.css), JavaScript (script.js)
+-->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="This is the main HTML file for the NN Inspector application, which visualizes 
+    neural network architectures and provides an interface for interactive adjustments and analysis.">
+    <meta name="keywords" content="neural network, interactive, interpretability, interpretable, MLP, perceptron, toy models, machine learning">
+    <meta name="author" content="Fraser King">
+    <title>NN Inspector</title>
+    <link rel="stylesheet" href="css/style.css"> 
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+    <div id="header">
+        <a href="https://frasertheking.com/nn_app/" style='text-decoration: none;'><div class="header-title">&#128270 NN Inspector</div></a>
+        <div class="header-links">
+            <a href="https://github.com/frasertheking/inspector" target="_blank">How to Use</a>
+            <a href="https://frasertheking.com/nn_app/about.html">About</a>
+            <a href="mailto:kingfr@umich.edu" target="_blank">Contact</a>
+        </div>
+            <button class="header-button" onclick="handleButtonClick()">Try with Your Own Data</button>
+    </div>
+    
+    <div id="controls">
+        <div class="control-section">
+            <div id="mode-selection">
+                <label for="mode-select">Mode:</label>
+                <select id="mode-select">
+                    <option value="training" selected>Training</option>
+                    <option value="testing">Testing</option>
+                </select>
+            </div>
+            <button id="model-info-button">Info</button>
+        </div>
+
+        <div id="model-info-modal" style="display: none;">
+            <div id="model-info-content">
+                <h3>Model Hyperparameters</h3>
+                <div id="hyperparameters"></div>
+                <button id="close-model-info">Close</button>
+            </div>
+        </div>
+        
+        <div id="training-controls" class="control-section">
+            <button id="play-pause-button">Play</button>
+            <button id="step-button">Step</button>
+            <button id="restart-button">Restart</button>
+        </div>
+        
+        <div id="testing-controls" class="control-section" style="display: none;">
+            <button id="custom-test-button">Custom Test</button>
+            <button id="lrp-button">Activate LRP</button>
+        </div>
+    
+        <div id="input-selection" class="control-section">
+            <button id="toggle-inputs-button">Select Inputs</button>
+            <div id="input-options" class="collapsible-content">
+                <form autocomplete="off" id="input-form">
+                </form>
+            </div>
+        </div>
+                
+        <div id="neuron-selection" class="control-section">
+            <label>Neurons:</label>
+            <button id="minus-button">-</button>
+            <span id="neuron-count">4</span>
+            <button id="plus-button">+</button>
+        </div>
+    
+        <div id="toggle-weights" class="control-section">
+            <label><input type="checkbox" id="show-weights-checkbox"> Weights</label>
+            <label><input type="checkbox" id="regularization-checkbox"> L1 </label>
+        </div>
+    </div>
+    
+    <div id="custom-test-modal" style="display:none;">
+        <div id="custom-test-content">
+            <center>
+            <h3>Enter Custom Test Case Values</h3>
+            <form id="custom-test-form"></form>
+            <br />
+                <button id="custom-test-submit">Submit</button>
+                <button id="custom-test-cancel">Cancel</button>
+            </center>
+        </div>
+    </div>
+
+    <div id="epoch-text">Loading...</div>
+
+    <div id="main-content">
+        <div id="network">
+        </div>
+        <div id="plots">
+            <div id="loss-plot" class="plot">
+            </div>
+            <div id="accuracy-plot" class="plot">
+            </div>
+            <div id="activation-heatmap" class="plot" style="display: none;">
+            </div>
+            <div id="activation-sparsity" class="plot" style="display: none;">
+            </div>
+            <div id="metrics" class="table-container">
+                <table></table>
+            </div>
+            <div id="confusion-matrix" class="table-container">
+                <table></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div id="footer">
+        <p>&copy; 2024 Fraser King |<a href="https://umich.edu/" target="_blank">University of Michigan</a>| Towards Interpretable Models</p>
+    </div> -->
+
+    <script src="scripts/script.js"></script>
+
+</body>
+</html>

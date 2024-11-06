@@ -1,0 +1,356 @@
+/*
+NN Inspector Application - CSS
+Author: Fraser King
+Date: November 2024
+Description: This CSS file styles the NN Inspector interface, including layout and responsive design.
+
+Main styles:
+- Body background and font
+- Responsive layout adjustments for plots and network sections
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    min-width: 1275px;
+}
+
+@media (max-width: 1920px) {
+    #main-content {
+        height: auto;
+        flex-direction: column;
+        padding-bottom: 50px;
+    }
+
+    #plots {
+        order: 1;
+        width: 100%;
+        height: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, auto);
+        margin-right: 100px;
+        margin-top: 25px;
+    }
+
+    #network {
+        order: 2;
+        width: 100%;
+        height: 50vh;
+    }
+}
+
+#main-content {
+    display: flex;
+    background-color: #f9f9f9;
+    height: calc(100vh - 240px);
+    gap: 20px;
+    padding: 0 20px;
+}
+
+#network {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    min-width: 300px;
+    min-height: 850px;
+    order: 1;
+}
+
+#plots {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    order: 2;
+    margin-right: 75px;
+}
+
+.plot, .table-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 80px; 
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 2;
+}
+
+
+.header-title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+#controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #005088;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    z-index: 100;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 15px;
+}
+
+.control-section {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 8px;
+}
+
+#mode-selection {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#toggle-weights {
+    height: 30px;
+}
+
+.shifted-down {
+    margin-top: 375px;
+}
+
+button, select {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover, select:hover {
+    background-color: #e0e0e0;
+}
+
+#mode-select {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.input-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 5px;
+}
+
+#neuron-selection {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#toggle-weights {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.collapsible-content {
+    display: none;
+    margin-top: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+#toggle-inputs-button {
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header-links {
+    display: flex;
+    gap: 150px;
+}
+
+.header-links a {
+    font-size: 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.header-links a:hover {
+    color: #646464;
+}
+
+.header-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #005088;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.header-button:hover {
+    background-color: #3f9cff;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color:white;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+#custom-test-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#custom-test-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#footer {
+    width: 100%;
+    padding: 15px 0;
+    background-color: white;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+}
+
+#footer p {
+    margin: 0;
+}
+
+#footer a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 0 8px;
+    transition: color 0.3s ease;
+}
+
+#footer a:hover {
+    color: #0056b3;
+}
+
+#epoch-text {
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    padding: 10px 0;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#model-info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#model-info-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+}
+
+#input-options {
+    margin-top: 0px;
+    padding: 5px;
+    background-color: #f0f0f0;
+}
+
+#main-content-about {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    background-color: white;
+    z-index: 1;
+}
+
+.content-section {
+    margin-bottom: 75px;
+}
+
+.content-section h1,
+.content-section h2 {
+    text-align: center;
+}
+
+.content-section p,
+.content-section ul {
+    text-align: left;
+    line-height: 1.6;
+}
+
+.content-section ul {
+    margin-left: 20px;
+}
+
