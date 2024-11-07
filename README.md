@@ -31,6 +31,8 @@ As machine learning models become increasingly sophisticated, understanding thei
 
 While we don't promise a full mechanistic interpretability workflow, this tool can be useful for various explainable AI projects and facilitates movement towards an interpretable understanding of model behaviour. NN Inspector simplifies network complexity by allowing users to focus on individual neurons and start with simple configurations.
 
+![training](https://github.com/frasertheking/inspector/blob/main/images/training.gif?raw=true)
+
 
 ## Use Cases
 
@@ -77,7 +79,8 @@ Customize the application by modifying the user configuration options in the Jav
 
 ```javascript
 let model_name = 'name-goes-here';
-let input_vars = ["n0", "lambda", "Rho", "Fs", "Dm", "Temperature", "Relative Humidity", "Pressure"];
+let input_vars = ["n0", "lambda", "Rho", "Fs", "Dm",
+                  "Temperature", "Relative Humidity", "Pressure"];
 let log_scaled_vars = ['n0', 'lambda', 'Rho', 'Dm'];
 let response_vars = ['Rain', 'Snow', 'Mixed-Phase'];
 let model_loc = 'models/name-goes-here/';
@@ -169,8 +172,10 @@ class WeightBiasHistory(tf.keras.callbacks.Callback):
         )
 
     def on_epoch_end(self, epoch, logs=None):
-        weights = [layer.get_weights()[0].tolist() for layer in self.model.layers if layer.get_weights()]
-        biases = [layer.get_weights()[1].tolist() for layer in self.model.layers if layer.get_weights()]
+        weights = [layer.get_weights()[0].tolist() for layer in
+                  self.model.layers if layer.get_weights()]
+        biases = [layer.get_weights()[1].tolist() for layer in
+                  self.model.layers if layer.get_weights()]
 
         weights_history.append(weights)
         biases_history.append(biases)
