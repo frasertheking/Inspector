@@ -1,8 +1,11 @@
-# :mag_right: NN Inspector
+<div align="center">
 
-**NN Inspector** is an interactive web application for visualizing and exploring neural network architectures in real time. If you've ever wondered how a neural network actually works, this playground lets you experiment with various components of the network to see how performance changes using real world data. 
+![logo](https://github.com/frasertheking/inspector/blob/main/images/logo.png?raw=true)
 
-A live demo of this app is also [available online](https://frasertheking.com/nn_app/). 
+**NN Inspector** is an interactive web application for visualizing and exploring neural network architectures in real time, maintained by [Fraser King](https://frasertheking.com/)
+A live demo of this app is [available online](https://frasertheking.com/nn_app/). 
+
+</div>
 
 
 ## Features
