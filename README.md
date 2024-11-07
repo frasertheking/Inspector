@@ -85,7 +85,7 @@ let log_scaled_vars = ['n0', 'lambda', 'Rho', 'Dm'];
 let response_vars = ['Rain', 'Snow', 'Mixed-Phase'];
 let model_loc = 'models/name-goes-here/';
 let test_filepath = 'data/data_name-goes-here.csv';
-let hiddenNeuronOptions = [1, 2, 4, 8, 16];
+let hidden_neuron_options = [1, 2, 4, 8, 16];
 ```
 
 
