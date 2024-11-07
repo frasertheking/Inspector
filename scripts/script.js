@@ -22,7 +22,7 @@ let log_scaled_vars = ['n0', 'lambda', 'Rho', 'Dm']
 let response_vars = ['Rain', 'Snow', 'Mixed-Phase'];
 let model_loc = 'models/phase3/'
 let test_filepath = 'data/test_data.csv'
-let hiddenNeuronOptions = [1, 2, 4, 8, 16];
+let hidden_neuron_options = [1, 2, 4, 8, 16];
 
 /* MODEL 2 */
 // let model_name = '9phase'
@@ -31,7 +31,7 @@ let hiddenNeuronOptions = [1, 2, 4, 8, 16];
 // let response_vars = ['Heavy Rain', 'Drizzle', 'Heavy R-M', 'Light R-M', 'Heavy Mixed', 'Heavy S-M', 'Light Mixed', 'Heavy Snow', 'Light Snow']
 // let model_loc = 'models/phase9/'
 // let test_filepath = 'data/test_data_umap.csv'
-// let hiddenNeuronOptions = [1, 2, 4, 8, 16];
+// let hidden_neuron_options = [1, 2, 4, 8, 16];
 
 
 
@@ -147,7 +147,7 @@ function handleButtonClick() {
         response_vars = ['Rain', 'Snow', 'Mixed-Phase'];
         model_loc = 'models/phase3/'
         test_filepath = 'data/test_data.csv'
-        hiddenNeuronOptions = [1, 2, 4, 8, 16];
+        hidden_neuron_options = [1, 2, 4, 8, 16];
     } else {
         model_name = '9phase';
         input_vars = ['n0', 'Nt', 'lambda', 'Rho', 'Fs', 'Dm', 'Temperature', 'Relative Humidity', 'Pressure', 'Wind_Speed', 'Near Surface Reflectivity', 'Cloud Top Height']
@@ -155,7 +155,7 @@ function handleButtonClick() {
         response_vars = ['Heavy Rain', 'Drizzle', 'Heavy R-M', 'Light R-M', 'Heavy Mixed', 'Heavy S-M', 'Light Mixed', 'Heavy Snow', 'Light Snow']
         model_loc = 'models/phase9/'
         test_filepath = 'data/test_data_umap.csv'
-        hiddenNeuronOptions = [1, 2, 4, 8, 16];
+        hidden_neuron_options = [1, 2, 4, 8, 16];
     }
     loadModelJSON();
     loadTestData();
@@ -208,9 +208,9 @@ function handleInputSelectionChange(event) {
 
 function updateNeuronCount(delta) {
     const newIndex = currentNeuronIndex + delta;
-    if (newIndex >= 0 && newIndex < hiddenNeuronOptions.length) {
+    if (newIndex >= 0 && newIndex < hidden_neuron_options.length) {
         currentNeuronIndex = newIndex;
-        neuronCountDisplay.textContent = hiddenNeuronOptions[currentNeuronIndex];
+        neuronCountDisplay.textContent = hidden_neuron_options[currentNeuronIndex];
         currentEpoch = null;
         loadModelJSON();
     }
@@ -220,7 +220,7 @@ function constructModelFilename() {
     const inputsInOrder = input_vars.filter(input => input_vars.includes(input));
     const isRegularizationEnabled = document.getElementById('regularization-checkbox').checked;
     const regularizationStatus = isRegularizationEnabled ? 'on' : 'off';
-    const filename = model_loc + 'model_' + inputsInOrder.join('_') + '_hidden_' + hiddenNeuronOptions[currentNeuronIndex] + '_L1_' + regularizationStatus + '.json';
+    const filename = model_loc + 'model_' + inputsInOrder.join('_') + '_hidden_' + hidden_neuron_options[currentNeuronIndex] + '_L1_' + regularizationStatus + '.json';
     return filename;
 }
 
