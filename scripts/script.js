@@ -242,7 +242,7 @@ function loadModelJSON() {
         })
         .catch(function(error) {
             console.error('Error loading JSON:', error);
-            alert('Error loading model JSON file. Please check your selections.');
+            alert('Error loading model JSON file. Refresh page to fix.');
         });
 }
 
