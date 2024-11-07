@@ -248,8 +248,8 @@ The application is currently under development with the following planned improv
 
 The project draws inspiration from:
 
-- Daniel Smilkov and Shan Carter: For their work on interactive tools like TensorFlow Playground that make complex machine learning concepts accessible.
-- Chris Olah and Colleagues at Anthropic: Especially their work on Toy Models of Superposition in interpretability research.
+- Daniel Smilkov and Shan Carter: For their work on interactive tools like [TensorFlow Playground](https://playground.tensorflow.org) that make complex machine learning concepts accessible.
+- Chris Olah and Colleagues at Anthropic: Especially their work on [Toy Models of Superposition](https://transformer-circuits.pub/2022/toy_model/index.html) in interpretability research.
 
 
 ## Contributing
@@ -260,6 +260,7 @@ Contributions are welcome! Please follow these steps:
 - Create a new branch for your feature or bug fix.
 - Commit your changes and push the branch.
 - Submit a pull request for review.
+- Make things **better**!
 
 
 ## Contact
