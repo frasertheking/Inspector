@@ -34,11 +34,6 @@ While we don't promise a full mechanistic interpretability workflow, this tool c
 ![training](https://github.com/frasertheking/inspector/blob/main/images/training.gif?raw=true)
 
 
-## Demo
-
-[![demo](https://img.youtube.com/vi/OndxEbix0cI/maxresdefault.jpg)](https://youtu.be/OndxEbix0cI)
-
-
 ## Use Cases
 
 NN Inspector is designed for:
@@ -234,6 +229,11 @@ model_data = {
 with open(filepath, 'w') as f:
   json.dump(model_data, f)
 ```
+
+
+## Demo Video
+
+[![demo](https://img.youtube.com/vi/OndxEbix0cI/maxresdefault.jpg)](https://youtu.be/OndxEbix0cI)
 
 
 ## Roadmap
