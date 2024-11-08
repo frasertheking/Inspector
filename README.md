@@ -4,7 +4,7 @@
 
 **NN Inspector** is an interactive web app for visualizing and exploring neural network architectures, maintained by [Fraser King](https://frasertheking.com/)
 
-A live demo of this app is [available online](https://frasertheking.com/nn_app/)
+A live version of this app is [available online](https://frasertheking.com/nn_app/)
 
 </div>
 
@@ -32,6 +32,11 @@ As machine learning models become increasingly sophisticated, understanding thei
 While we don't promise a full mechanistic interpretability workflow, this tool can be useful for various explainable AI projects and facilitates movement towards an interpretable understanding of model behaviour. NN Inspector simplifies network complexity by allowing users to focus on individual neurons and start with simple configurations.
 
 ![training](https://github.com/frasertheking/inspector/blob/main/images/training.gif?raw=true)
+
+
+## Demo
+
+[![demo](https://img.youtube.com/vi/OndxEbix0cI/maxresdefault.jpg)](https://youtu.be/OndxEbix0cI)
 
 
 ## Use Cases
