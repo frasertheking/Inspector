@@ -15,26 +15,28 @@ Configuration Options:
 /*
 USER CONFIGS
 */
-/* CLASSIFIER */
-let model_name = 'classifier'
-let input_vars = ["n0", "lambda", "Rho", "Fs", "Dm", "Temperature", "Relative Humidity", "Pressure"];
-let log_scaled_vars = ['n0', 'lambda', 'Rho', 'Dm'];
-let response_vars = ['Rain', 'Snow', 'Mixed-Phase'];
-let model_loc = 'models/classifier/';
-let test_filepath = 'data/test_data_classifier.csv';
-let hidden_neuron_options = [1, 2, 4, 8, 16];
-
-
-/* REGRESSOR */
-// let model_name = 'regressor'
-// let input_vars = ['reflectivity_3', 'reflectivity_4', 'n0', 'lambda', 't_15', 't_16', 'rh_15', 'rh_16'];
-// let log_scaled_vars = [];
-// let response_vars = ['Sr'];
-// let model_loc = 'models/regressor/';
-// let test_filepath = 'data/test_data_regressor.csv';
-// let hidden_neuron_options = [1, 2, 4, 8, 16];
-
-
+const configurations = {
+    'classifier': {
+        model_name: 'classifier',
+        input_vars: ["n0", "lambda", "Rho", "Fs", "Dm", "Temperature", "Relative Humidity", "Pressure"],
+        log_scaled_vars: ['n0', 'lambda', 'Rho', 'Dm'],
+        response_vars: ['Rain', 'Snow', 'Mixed-Phase'],
+        response_name: 'phase',
+        model_loc: 'models/classifier/',
+        test_filepath: 'data/test_data_classifier.csv',
+        hidden_neuron_options: [1, 2, 4, 8, 16]
+    },
+    'regressor': {
+        model_name: 'regressor',
+        input_vars: ['reflectivity_3', 'reflectivity_4', 'n0', 'lambda', 't_15', 't_16', 'rh_15', 'rh_16'],
+        log_scaled_vars: [],
+        response_vars: ['Sr'],
+        response_name: 'Sr',
+        model_loc: 'models/regressor/',
+        test_filepath: 'data/test_data_regressor.csv',
+        hidden_neuron_options: [1, 2, 4, 8, 16]
+    }
+};
 
 /* MODEL 2 */
 // let model_name = '9phase'
@@ -50,6 +52,17 @@ let hidden_neuron_options = [1, 2, 4, 8, 16];
 /*
 GLOBALS
 */
+// Global variables
+let model_name;
+let input_vars;
+let log_scaled_vars;
+let response_vars;
+let response_name;
+let model_loc;
+let test_filepath;
+let hidden_neuron_options;
+
+
 let inputCheckboxes;
 let svg;
 let nodePositions = {};
@@ -104,7 +117,8 @@ let accuracySvg, accXScale, accYScale, accLineTrain, accLineVal, accXAxis, accYA
 /*
 SETUP & EVENT HANDLERS
 */
-loadModelJSON();
+setConfiguration('classifier');
+// loadModelJSON();
 window.onload = generateCheckboxes;
 
 const minusButton = document.getElementById('minus-button');
@@ -116,6 +130,15 @@ const modeSelect = document.getElementById('mode-select');
 modeSelect.addEventListener('change', handleModeChange);
 minusButton.addEventListener('click', () => updateNeuronCount(-1));
 plusButton.addEventListener('click', () => updateNeuronCount(1));
+document.getElementById('classifier-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    setConfiguration('classifier');
+});
+
+document.getElementById('regressor-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    setConfiguration('regressor');
+});
 
 document.getElementById('show-weights-checkbox').addEventListener('change', function() {
     showWeights = this.checked;
@@ -144,6 +167,9 @@ document.getElementById('regularization-checkbox').addEventListener('change', fu
     loadModelJSON();
 });
 document.getElementById('lrp-button').addEventListener('click', toggleLRPMode);
+document.getElementById('play-pause-button').addEventListener('click', () => playPauseTraining(svg));
+document.getElementById('step-button').addEventListener('click', () => trainOneStep(svg));
+document.getElementById('restart-button').addEventListener('click', () => restartTrainingVisualization(svg));
 handleModeChange();
 
 
@@ -151,27 +177,33 @@ handleModeChange();
 /*
 FUNCTIONS
 */
-function handleButtonClick() {
-    if (model_name == '9phase') {
-        model_name = '3phase';
-        input_vars = ["n0", "lambda", "Rho", "Fs", "Dm", "Temperature", "Relative Humidity", "Pressure"];
-        log_scaled_vars = ['n0', 'lambda', 'Rho', 'Dm']
-        response_vars = ['Rain', 'Snow', 'Mixed-Phase'];
-        model_loc = 'models/phase3/'
-        test_filepath = 'data/test_data.csv'
-        hidden_neuron_options = [1, 2, 4, 8, 16];
-    } else {
-        model_name = '9phase';
-        input_vars = ['n0', 'Nt', 'lambda', 'Rho', 'Fs', 'Dm', 'Temperature', 'Relative Humidity', 'Pressure', 'Wind_Speed', 'Near Surface Reflectivity', 'Cloud Top Height']
-        log_scaled_vars = ['n0', 'Nt', 'lambda', 'Rho', 'Dm']
-        response_vars = ['Heavy Rain', 'Drizzle', 'Heavy R-M', 'Light R-M', 'Heavy Mixed', 'Heavy S-M', 'Light Mixed', 'Heavy Snow', 'Light Snow']
-        model_loc = 'models/phase9/'
-        test_filepath = 'data/test_data_umap.csv'
-        hidden_neuron_options = [1, 2, 4, 8, 16];
-    }
+function setConfiguration(configName) {
+    const config = configurations[configName];
+
+    // Update global variables
+    model_name = config.model_name;
+    input_vars = config.input_vars;
+    log_scaled_vars = config.log_scaled_vars;
+    response_vars = config.response_vars;
+    response_name = config.response_name;
+    model_loc = config.model_loc;
+    test_filepath = config.test_filepath;
+    hidden_neuron_options = config.hidden_neuron_options;
+
+    // Call functions to reload data
+    generateCheckboxes();
     loadModelJSON();
     loadTestData();
+
+    if (model_name === 'classifier') {
+        document.getElementById('confusion-matrix').style.display = 'block';
+        document.getElementById('metrics').style.display = 'block';
+    } else if (model_name === 'regressor') {
+        document.getElementById('confusion-matrix').style.display = 'none';
+        document.getElementById('metrics').style.display = 'none';
+    }
 }
+
 
 function closeCustomTestModal() {
     document.getElementById('custom-test-modal').style.display = 'none';
@@ -381,27 +413,35 @@ function loadTestData() {
 }
 
 function computeConfusionMatrix() {
-    const numClasses = response_vars.length;
-    let confusionMatrix = Array.from({
-            length: numClasses
-        }, () =>
-        Array(numClasses).fill(0)
-    );
+    let confusionMatrix;
+    if (model_name == 'classifier') {
+        const numClasses = response_vars.length;
+        confusionMatrix = Array.from({
+                length: numClasses
+            }, () =>
+            Array(numClasses).fill(0)
+        );
+
+        displayConfusionMatrix(confusionMatrix);
+        computeMetrics(confusionMatrix);
+    }
 
     const activationData = [];
+    let outputs = [];
     testData.forEach(function(testCase) {
         const result = predict(testCase);
         const predictedLabel = result.predictedLabel;
         const hiddenActivations = result.hiddenActivations;
         activationData.push(hiddenActivations);
 
-        const trueLabel = testCase['phase'];
-        confusionMatrix[trueLabel][predictedLabel] += 1;
+        if (model_name == 'classifier') {
+            const out = testCase[response_name];
+            confusionMatrix[out][predictedLabel] += 1;
+        } else {
+            outputs.push(testCase[response_name]);
+        }
     });
-
-    displayConfusionMatrix(confusionMatrix);
-    computeMetrics(confusionMatrix);
-    computeAndDisplayActivationPlots(activationData);
+    computeAndDisplayActivationPlots(activationData, outputs);
 }
 
 function predict(testCase) {
@@ -443,8 +483,16 @@ function predict(testCase) {
         outputZs[i] = z;
     }
 
-    const outputActivations = softmax(outputZs);
-    const predictedLabel = outputActivations.indexOf(Math.max(...outputActivations));
+    let outputActivations;
+    let predictedLabel;
+    if (model_name == 'classifier') {
+        outputActivations = softmax(outputZs);
+        predictedLabel = outputActivations.indexOf(Math.max(...outputActivations));
+    } else { // Regression is linear output layer
+        predictedLabel = outputZs.length === 1 
+            ? Math.max(0, outputZs[0]) 
+            : outputZs.map(value => Math.max(0, value));
+    }
     return {
         predictedLabel,
         hiddenActivations
@@ -586,8 +634,14 @@ function processModelData(data) {
 
     lossHistory = data.loss_history;
     valLossHistory = data.val_loss_history;
-    accuracyHistory = data.accuracy_history;
-    valAccuracyHistory = data.val_accuracy_history;
+
+    if (model_name == 'classifier') {
+        accuracyHistory = data.accuracy_history;
+        valAccuracyHistory = data.val_accuracy_history;
+    } else {
+        accuracyHistory = data.mae_history;
+        valAccuracyHistory = data.val_mae_history;
+    }
 
     allWeights = [];
     allActivations = [];
@@ -1044,9 +1098,6 @@ function processModelData(data) {
         });
 
     isAnimating = false;
-    document.getElementById('play-pause-button').addEventListener('click', () => playPauseTraining(svg));
-    document.getElementById('step-button').addEventListener('click', () => trainOneStep(svg));
-    document.getElementById('restart-button').addEventListener('click', () => restartTrainingVisualization(svg));
 
     createLossPlot();
     createAccuracyPlot();
@@ -1210,7 +1261,7 @@ async function loadTestCaseIntoNN(index) {
     }
 }
 
-function createActivationSparsityPlot(activationData) {
+function createActivationSparsityPlot(activationData, trueOut) {
     const margin = {
         top: 50,
         right: 50,
@@ -1246,11 +1297,15 @@ function createActivationSparsityPlot(activationData) {
     activationData.forEach((sample, sampleIndex) => {
         sample.forEach((activation, neuronIndex) => {
             if (activation > epsilon) {
+                const responseValue = model_name == 'classifier'
+                    ? testData[sampleIndex][response_name]
+                    : trueOut[sampleIndex];
+
                 plotData.push({
                     sampleIndex: sampleIndex,
                     neuronIndex: neuronIndex,
                     activation: activation,
-                    class: testData[sampleIndex].phase
+                    value: responseValue
                 });
             }
         });
@@ -1264,10 +1319,26 @@ function createActivationSparsityPlot(activationData) {
         .domain([0, numNeurons - 1])
         .range([height, 0]);
 
-    const classColors = d3.scaleOrdinal()
-        .domain(d3.range(response_vars.length))
-        .range(d3.schemeCategory10.slice(0, response_vars.length));
-    
+    let colorScale;
+    if (model_name == 'classifier') {
+        colorScale = d3.scaleOrdinal()
+            .domain(d3.range(response_vars.length))
+            .range(d3.schemeCategory10.slice(0, response_vars.length));
+    } else if (model_name == 'regressor') {
+        const responseValues = trueOut;
+        const minResponse = d3.min(responseValues);
+        const maxResponse = d3.max(responseValues);
+        
+        if (minResponse > 0) {
+            colorScale = d3.scaleSequentialLog(d3.interpolatePlasma)
+                .domain([minResponse, maxResponse]);
+        } else {
+            const adjustedMin = epsilon; 
+            colorScale = d3.scaleSequentialLog(d3.interpolatePlasma)
+                .domain([adjustedMin, maxResponse + Math.abs(minResponse) + epsilon]);
+        }
+    }
+
     svg.selectAll("text")
         .data(plotData)
         .enter()
@@ -1276,10 +1347,9 @@ function createActivationSparsityPlot(activationData) {
         .attr("y", d => yScale(d.neuronIndex))
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "middle")
-        .attr("font-size", "12px") // Adjust the font size as needed
-        .attr("fill", d => classColors(d.class))
+        .attr("font-size", "12px")
+        .attr("fill", d => colorScale(d.value))
         .text('|');
-    
 
     svg.append("g")
         .attr("transform", `translate(0, ${height})`)
@@ -1310,13 +1380,12 @@ function createActivationSparsityPlot(activationData) {
         .attr("y2", height)
         .style("visibility", "hidden");
 
-        // Dashed vertical line (if needed)
     const verticalLine2 = svg.append("line")
         .attr("y1", 0)
         .attr("y2", height)
         .attr("stroke", "gray")
         .attr("stroke-width", 2)
-        .attr("stroke-dasharray", "4,4") // Dashed line style
+        .attr("stroke-dasharray", "4,4") 
         .attr("x1", testClickLineLocation)
         .attr("x2", testClickLineLocation);
 
@@ -1349,14 +1418,19 @@ function createActivationSparsityPlot(activationData) {
                 .style("visibility", "visible");
 
             const activations = activationData[boundedSampleIndex];
-            const currentClass = testData[boundedSampleIndex].phase;
-            const className = response_vars[currentClass] || `Class ${currentClass}`;
+            const currentResponse = model_name == 'classifier'
+                ? testData[boundedSampleIndex][response_name]
+                : trueOut[boundedSampleIndex];
+
+            const responseInfo = model_name == 'classifier' 
+                ? `Class: ${response_vars[currentResponse] || `Class ${currentResponse}`}`
+                : `Response: ${currentResponse}`;
 
             const tooltipContent = activations
                 .map((activation, i) => `H${i}: ${activation.toFixed(2)}`)
                 .join("<br>");
 
-            tooltip.html(`Test Case ${boundedSampleIndex}<br>Class: ${className}<br>${tooltipContent}`)
+            tooltip.html(`Test Case ${boundedSampleIndex}<br>${responseInfo}<br>${tooltipContent}`)
                 .style("visibility", "visible")
                 .style("top", (event.pageY + 15) + "px")
                 .style("left", (event.pageX + 15) + "px");
@@ -1377,14 +1451,15 @@ function createActivationSparsityPlot(activationData) {
         });
 }
 
-function computeAndDisplayActivationPlots(activationData) {
+
+function computeAndDisplayActivationPlots(activationData, trueOut) {
     if (modeSelect.value !== 'testing') return;
 
     d3.select('#activation-heatmap').selectAll('*').remove();
     d3.select('#activation-sparsity').selectAll('*').remove();
 
     createActivationHeatmap(activationData);
-    createActivationSparsityPlot(activationData);
+    createActivationSparsityPlot(activationData, trueOut);
 }
 
 function updateEdgeLabelsVisibility() {
@@ -1621,7 +1696,14 @@ function runTestCaseCombined({ inputVector = null, testCase = null, scaledInputs
         outputZs[i] = z;
     }
 
-    const outputActivations = softmax(outputZs);
+    let outputActivations;
+    if (model_name == 'classifier') {
+        outputActivations = softmax(outputZs);
+    } else { // Regression is linear output layer
+        outputActivations = Array.isArray(outputZs) 
+            ? outputZs.map(value => Math.max(0, value)) 
+            : Math.max(0, outputZs);
+    }
 
     nodeData.forEach(node => {
         if (inputNodes.includes(node.name)) {
