@@ -197,6 +197,7 @@ button:hover, select:hover {
     gap: 150px;
 }
 
+
 .header-links a {
     font-size: 20px;
     color: #333;
@@ -209,7 +210,14 @@ button:hover, select:hover {
     color: #646464;
 }
 
-.header-button {
+.header-buttons-container {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 10px; 
+    margin-right: 20px; 
+}
+
+.header-button-classifier {
     padding: 10px 20px;
     font-size: 14px;
     font-weight: bold;
@@ -221,8 +229,24 @@ button:hover, select:hover {
     transition: background-color 0.3s ease;
 }
 
-.header-button:hover {
+.header-button-classifier:hover {
     background-color: #3f9cff;
+}
+
+.header-button-regressor {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #a70000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.header-button-regressor:hover {
+    background-color: #e61e1e;
 }
 
 table {

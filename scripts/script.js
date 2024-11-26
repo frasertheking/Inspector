@@ -15,14 +15,26 @@ Configuration Options:
 /*
 USER CONFIGS
 */
-/* MODEL 1 */
-let model_name = '3phase'
+/* CLASSIFIER */
+let model_name = 'classifier'
 let input_vars = ["n0", "lambda", "Rho", "Fs", "Dm", "Temperature", "Relative Humidity", "Pressure"];
-let log_scaled_vars = ['n0', 'lambda', 'Rho', 'Dm']
+let log_scaled_vars = ['n0', 'lambda', 'Rho', 'Dm'];
 let response_vars = ['Rain', 'Snow', 'Mixed-Phase'];
-let model_loc = 'models/phase3/'
-let test_filepath = 'data/test_data.csv'
+let model_loc = 'models/classifier/';
+let test_filepath = 'data/test_data_classifier.csv';
 let hidden_neuron_options = [1, 2, 4, 8, 16];
+
+
+/* REGRESSOR */
+// let model_name = 'regressor'
+// let input_vars = ['reflectivity_3', 'reflectivity_4', 'n0', 'lambda', 't_15', 't_16', 'rh_15', 'rh_16'];
+// let log_scaled_vars = [];
+// let response_vars = ['Sr'];
+// let model_loc = 'models/regressor/';
+// let test_filepath = 'data/test_data_regressor.csv';
+// let hidden_neuron_options = [1, 2, 4, 8, 16];
+
+
 
 /* MODEL 2 */
 // let model_name = '9phase'
