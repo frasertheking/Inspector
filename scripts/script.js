@@ -180,7 +180,6 @@ FUNCTIONS
 function setConfiguration(configName) {
     const config = configurations[configName];
 
-    // Update global variables
     model_name = config.model_name;
     input_vars = config.input_vars;
     log_scaled_vars = config.log_scaled_vars;
@@ -190,15 +189,18 @@ function setConfiguration(configName) {
     test_filepath = config.test_filepath;
     hidden_neuron_options = config.hidden_neuron_options;
 
-    // Call functions to reload data
     generateCheckboxes();
     loadModelJSON();
     loadTestData();
 
     if (model_name === 'classifier') {
+        document.getElementById('scatter-plot').style.display = 'none';
+        document.getElementById('reg-metric').style.display = 'none';
         document.getElementById('confusion-matrix').style.display = 'block';
         document.getElementById('metrics').style.display = 'block';
     } else if (model_name === 'regressor') {
+        document.getElementById('scatter-plot').style.display = 'block';
+        document.getElementById('reg-metric').style.display = 'block';
         document.getElementById('confusion-matrix').style.display = 'none';
         document.getElementById('metrics').style.display = 'none';
     }
@@ -370,6 +372,8 @@ function handleModeChange() {
         document.getElementById('testing-controls').style.display = 'none';
         document.getElementById('activation-heatmap').style.display = 'none';
         document.getElementById('activation-sparsity').style.display = 'none';
+        document.getElementById('scatter-plot').style.display = 'none';
+        document.getElementById('reg-metric').style.display = 'none';
         document.getElementById('confusion-matrix').style.display = 'none';
         document.getElementById('metrics').style.display = 'none';
         lossPlot.classList.add('shifted-down');
@@ -379,8 +383,14 @@ function handleModeChange() {
         document.getElementById('testing-controls').style.display = 'block';
         document.getElementById('activation-heatmap').style.display = 'block';
         document.getElementById('activation-sparsity').style.display = 'block';
-        document.getElementById('confusion-matrix').style.display = 'block';
-        document.getElementById('metrics').style.display = 'block';
+        if (model_name == 'regressor') {
+            document.getElementById('reg-metric').style.display = 'block';
+            document.getElementById('scatter-plot').style.display = 'block';
+        }
+        if (model_name == 'classifier') {
+            document.getElementById('confusion-matrix').style.display = 'block';
+            document.getElementById('metrics').style.display = 'block';
+        }
         lossPlot.classList.remove('shifted-down');
         accuracyPlot.classList.remove('shifted-down');
     }
@@ -421,27 +431,33 @@ function computeConfusionMatrix() {
             }, () =>
             Array(numClasses).fill(0)
         );
-
-        displayConfusionMatrix(confusionMatrix);
-        computeMetrics(confusionMatrix);
     }
 
     const activationData = [];
+    let predicted_outputs = [];
     let outputs = [];
     testData.forEach(function(testCase) {
         const result = predict(testCase);
         const predictedLabel = result.predictedLabel;
+        predicted_outputs.push(predictedLabel);
         const hiddenActivations = result.hiddenActivations;
         activationData.push(hiddenActivations);
 
         if (model_name == 'classifier') {
             const out = testCase[response_name];
+            console.log(response_name, out)
             confusionMatrix[out][predictedLabel] += 1;
         } else {
             outputs.push(testCase[response_name]);
         }
     });
-    computeAndDisplayActivationPlots(activationData, outputs);
+
+    if (model_name == 'classifier') {
+        displayConfusionMatrix(confusionMatrix);
+        computeMetrics(confusionMatrix);
+    }
+
+    computeAndDisplayActivationPlots(activationData, outputs, predicted_outputs);
 }
 
 function predict(testCase) {
@@ -642,6 +658,16 @@ function processModelData(data) {
         accuracyHistory = data.mae_history;
         valAccuracyHistory = data.val_mae_history;
     }
+
+    // Ensure output node activations are always >= 0
+    // TODO: might be bad assumption? Remove?
+    activationsHistory = activationsHistory.map(epochActivations =>
+        epochActivations.map((layerActivations, layerIndex) =>
+            layerIndex === epochActivations.length - 1
+                ? layerActivations.map(activation => Math.max(0, activation))
+                : layerActivations
+        )
+    );
 
     allWeights = [];
     allActivations = [];
@@ -918,7 +944,6 @@ function processModelData(data) {
 
     const labelOffset = 30;
 
-    // Node Labels (Variable Names)
     const nodeLabelSelection = svg.selectAll('.node-label')
         .data(nodeData)
         .enter()
@@ -1110,7 +1135,6 @@ function processModelData(data) {
         computeConfusionMatrix();
     }
 }
-
 
 function createActivationHeatmap(activationData) {
     const margin = {
@@ -1451,15 +1475,208 @@ function createActivationSparsityPlot(activationData, trueOut) {
         });
 }
 
+function displayScatterPredictedTrue(trueOut, predOut) {
+    // Clear any existing SVG and table content
+    d3.select("#scatter-plot").select("svg").remove();
+    document.getElementById('reg-metric').innerHTML = '';
 
-function computeAndDisplayActivationPlots(activationData, trueOut) {
+    // Make sure the divs are displayed
+    d3.select("#scatter-plot").style("display", "block");
+    document.getElementById('reg-metric').style.display = 'block';
+
+    // Compute statistical metrics
+    const n = trueOut.length;
+    let sumSquaredResiduals = 0;
+    let sumSquaredTotal = 0;
+    let sumAbsoluteErrors = 0;
+    let sumTrue = 0;
+    let sumPred = 0;
+    let sumTruePred = 0;
+    let sumTrueSquared = 0;
+    let sumPredSquared = 0;
+
+    const minTrue = d3.min(trueOut);
+    const maxTrue = d3.max(trueOut);
+    const minPred = d3.min(predOut);
+    const maxPred = d3.max(predOut);
+
+    const minVal = Math.min(minTrue, minPred);
+    const maxVal = Math.max(maxTrue, maxPred);
+
+    for (let i = 0; i < n; i++) {
+        const residual = predOut[i] - trueOut[i];
+        sumSquaredResiduals += residual * residual;
+        sumAbsoluteErrors += Math.abs(residual);
+
+        sumTrue += trueOut[i];
+        sumPred += predOut[i];
+        sumTruePred += trueOut[i] * predOut[i];
+        sumTrueSquared += trueOut[i] * trueOut[i];
+        sumPredSquared += predOut[i] * predOut[i];
+    }
+
+    const meanTrue = sumTrue / n;
+    const meanPred = sumPred / n;
+
+    for (let i = 0; i < n; i++) {
+        const deviation = trueOut[i] - meanTrue;
+        sumSquaredTotal += deviation * deviation;
+    }
+
+    const mse = sumSquaredResiduals / n;
+    const mae = sumAbsoluteErrors / n;
+    const rSquared = 1 - (sumSquaredResiduals / sumSquaredTotal);
+
+    // Pearson Correlation Coefficient
+    const numerator = n * sumTruePred - sumTrue * sumPred;
+    const denominator = Math.sqrt((n * sumTrueSquared - sumTrue * sumTrue) * (n * sumPredSquared - sumPred * sumPred));
+    const correlation = numerator / denominator;
+
+    // Setup SVG
+    const margin = { top: 50, right: 50, bottom: 50, left: 60 };
+    const width = 400;
+    const height = 400;
+
+    const svg = d3.select("#scatter-plot")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .style("background-color", "#f9f9f9")
+        .style('display', 'block')
+        .style('margin', '0 auto')
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const xScale = d3.scaleLinear()
+        .domain([minVal, maxVal])
+        .range([0, width]);
+
+    const yScale = d3.scaleLinear()
+        .domain([minVal, maxVal])
+        .range([height, 0]);
+
+    // 1-1 line
+    svg.append("line")
+        .attr("x1", xScale(minVal))
+        .attr("y1", yScale(minVal))
+        .attr("x2", xScale(maxVal))
+        .attr("y2", yScale(maxVal))
+        .attr("stroke", "black")
+        .attr("stroke-dasharray", "4,4");
+
+    // Data points
+    const data = trueOut.map((d, i) => ({ trueVal: d, predVal: predOut[i], index: i }));
+
+    svg.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xScale(d.trueVal))
+        .attr("cy", d => yScale(d.predVal))
+        .attr("r", 3)
+        .attr("fill", "steelblue")
+        .on("mouseover", function(event, d) {
+            tooltip.html(`Case: ${d.index}`)
+                .style("visibility", "visible");
+        })
+        .on("mousemove", function(event) {
+            tooltip
+                .style("top", (event.pageY + 15) + "px")
+                .style("left", (event.pageX + 15) + "px");
+        })
+        .on("mouseout", function() {
+            tooltip.style("visibility", "hidden");
+        });
+
+    // Axes
+    svg.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale));
+
+    svg.append("g")
+        .call(d3.axisLeft(yScale));
+
+    // X-axis label
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14px")
+        .text("True Values");
+
+    // Y-axis label
+    svg.append("text")
+        .attr("x", -height / 2)
+        .attr("y", -50)
+        .attr("transform", "rotate(-90)")
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14px")
+        .text("Predicted Values");
+
+    // Title
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", -20)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16px")
+        .attr("font-weight", "bold")
+        .text("Predicted vs True Scatter Plot");
+
+    // Tooltip
+    const tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("visibility", "hidden")
+        .style("background", "rgba(0, 0, 0, 0.7)")
+        .style("color", "white")
+        .style("padding", "8px")
+        .style("border-radius", "5px")
+        .style("font-size", "12px")
+        .style("pointer-events", "none");
+
+    // Build the metrics table using string concatenation
+    const metricsData = [
+        { metric: "Mean Squared Error (MSE)", value: mse.toFixed(4) },
+        { metric: "Mean Absolute Error (MAE)", value: mae.toFixed(4) },
+        { metric: "R² (Coefficient of Determination)", value: rSquared.toFixed(4) },
+        { metric: "Correlation Coefficient", value: correlation.toFixed(4) },
+        { metric: "Min True Value", value: minTrue },
+        { metric: "Max True Value", value: maxTrue },
+        { metric: "Min Predicted Value", value: minPred },
+        { metric: "Max Predicted Value", value: maxPred },
+    ];
+
+    let html = '';
+    html += `<p><b>Regression Metrics:</b></p>`;
+    html += '<table>';
+    html += '<tr><th>Metric</th><th>Value</th></tr>';
+
+    for (let i = 0; i < metricsData.length; i++) {
+        html += `<tr><td>${metricsData[i].metric}</td><td>${metricsData[i].value}</td></tr>`;
+    }
+
+    html += '</table>';
+
+    document.getElementById('reg-metric').innerHTML = html;
+}
+
+
+
+function computeAndDisplayActivationPlots(activationData, trueOut, predOut) {
     if (modeSelect.value !== 'testing') return;
 
     d3.select('#activation-heatmap').selectAll('*').remove();
     d3.select('#activation-sparsity').selectAll('*').remove();
+    d3.select('#reg-metric').selectAll('*').remove();
+    d3.select('#scatter-plot').selectAll('*').remove();
 
     createActivationHeatmap(activationData);
     createActivationSparsityPlot(activationData, trueOut);
+
+    if (model_name == 'regressor') {
+        displayScatterPredictedTrue(trueOut, predOut);
+    }
 }
 
 function updateEdgeLabelsVisibility() {

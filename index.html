@@ -22,7 +22,7 @@ Dependencies: D3.js v6, CSS (style.css), JavaScript (script.js)
 </head>
 <body>
     <div id="header">
-        <a href="https://frasertheking.com/nn_app/" style='text-decoration: none;'><div class="header-title">&#128270 NN Inspector</div></a>
+        <a href="https://frasertheking.com/nn_app/" style='text-decoration: none;'><div class="header-title">&#128270; NN Inspector</div></a>
         <div class="header-links">
             <a href="https://github.com/frasertheking/Inspector" target="_blank">How to Use</a>
             <a href="https://frasertheking.com/nn_app/about.html">About</a>
@@ -30,8 +30,8 @@ Dependencies: D3.js v6, CSS (style.css), JavaScript (script.js)
         </div>
             <!-- <button class="header-button" onclick="handleButtonClick()">Swap Models</button> -->
             <div class="header-buttons-container">
-                <a href="#"><button id="classifier-button" class="header-button-classifier">Classifier</button></a>
-                <a href="#"><button id="regressor-button" class="header-button-regressor">Regressor</button></a>
+                <a href="#"><button id="classifier-button" class="header-button-classifier">&#127919; Classifier</button></a>
+                <a href="#"><button id="regressor-button" class="header-button-regressor">&#128200; Regressor</button></a>
             </div>            
     </div>
     
@@ -112,6 +112,11 @@ Dependencies: D3.js v6, CSS (style.css), JavaScript (script.js)
             <div id="activation-heatmap" class="plot" style="display: none;">
             </div>
             <div id="activation-sparsity" class="plot" style="display: none;">
+            </div>
+            <div id="scatter-plot" class="plot" style="display: none;"> 
+            </div>
+            <div id="reg-metric" class="table-container">
+                <table></table>
             </div>
             <div id="metrics" class="table-container">
                 <table></table>
