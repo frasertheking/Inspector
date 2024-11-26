@@ -4,7 +4,7 @@
 
 **NN Inspector** is an interactive web app for visualizing and exploring neural network architectures, maintained by [Fraser King](https://frasertheking.com/)
 
-A live demo of this app is [available online](https://frasertheking.com/nn_app/)
+A live version of this app is [available online](https://frasertheking.com/nn_app/)
 
 </div>
 
@@ -229,6 +229,11 @@ model_data = {
 with open(filepath, 'w') as f:
   json.dump(model_data, f)
 ```
+
+
+## Demo Video
+
+[![demo](https://img.youtube.com/vi/OndxEbix0cI/maxresdefault.jpg)](https://youtu.be/OndxEbix0cI)
 
 
 ## Roadmap
